@@ -46,6 +46,6 @@ const keyboard = {
   close() {},
 };
 
-window.addEventListener('DOMContentLoader', function () {
+window.addEventListener('DOMContentLoaded', function () {
   keyboard.init();
 });
