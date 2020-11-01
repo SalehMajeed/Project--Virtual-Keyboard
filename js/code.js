@@ -130,14 +130,52 @@ const keyboard = {
 
           key_element.addEventListener('click', () => {
             this.properties.value += '\n';
-            key_element.classList.toggle(
-              'keyboard__key--active',
-              this.properties.caps_lock
-            );
+            this._trigger_event('oninput');
+          });
+          break;
+
+        case 'space':
+          key_element.classList.add('keyboard__key--extra-wide');
+          key_element.innerHTML = create_icon_html('space_bar');
+
+          key_element.addEventListener('click', () => {
+            this.properties.value += '\n';
+            this._trigger_event('oninput');
+          });
+          break;
+
+        case 'done':
+          key_element.classList.add(
+            'keyboard__key---wide',
+            'keyboard__key--dark'
+          );
+          key_element.innerHTML = create_icon_html('check_circle');
+
+          key_element.addEventListener('click', () => {
+            this.close();
+            this._trigger_event('onclose');
+          });
+          break;
+
+        default:
+          key_element.textContent = key.toLowerCase();
+
+          key_element.addEventListener('click', () => {
+            this.properties.value += this.properties.caps_lock
+              ? key.toUpperCase()
+              : key.toLowerCase();
+            this._trigger_event('oninput');
           });
           break;
       }
+
+      fragment.appendChild(key_element);
+
+      if (insert_line_break) {
+        fragment.appendChild(document.createElement('br'));
+      }
     });
+    return fragment;
   },
 
   _trigger_event(handler_name) {
