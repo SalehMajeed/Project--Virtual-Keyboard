@@ -8,8 +8,8 @@ const keyboard = {
   },
 
   event_handlers: {
-    on_input: null,
-    on_close: null,
+    oninput: null,
+    onclose: null,
   },
 
   properties: {
@@ -27,7 +27,7 @@ const keyboard = {
     this.elements.keys_container.classList.add('keyboard__keys');
     this.elements.keys_container.appendChild(this._create_keys());
 
-    this.elements.keys = this.elements.keys_container.querySelector(
+    this.elements.keys = this.elements.keys_container.querySelectorAll(
       '.keyboard__key'
     );
 
@@ -35,11 +35,11 @@ const keyboard = {
     this.elements.main.appendChild(this.elements.keys_container);
     document.body.appendChild(this.elements.main);
 
-    // Automatically use keyboard for elements wit .use-keyboard-input
+    // Automatically use keyboard for elements with .use-keyboard-input
     document.querySelectorAll('.use-keyboard-input').forEach((element) => {
       element.addEventListener('focus', () => {
-        this.open(element.value, (current_value) => {
-          element.value = current_value;
+        this.open(element.value, (currentValue) => {
+          element.value = currentValue;
         });
       });
     });
@@ -96,7 +96,7 @@ const keyboard = {
 
     // Create HTML for an icon
     const create_icon_html = (icon_name) => {
-      return '<i class="material-icon">${icon_name}</i>';
+      return `<i class="material-icons">${icon_name}</i>`;
     };
 
     key_layout.forEach((key) => {
@@ -116,7 +116,7 @@ const keyboard = {
           key_element.addEventListener('click', () => {
             this.properties.value = this.properties.value.substring(
               0,
-              this.properties.value.length
+              this.properties.value.length - 1
             );
             this._trigger_event('oninput');
           });
@@ -153,14 +153,14 @@ const keyboard = {
           key_element.innerHTML = create_icon_html('space_bar');
 
           key_element.addEventListener('click', () => {
-            this.properties.value += '\n';
+            this.properties.value += ' ';
             this._trigger_event('oninput');
           });
           break;
 
         case 'done':
           key_element.classList.add(
-            'keyboard__key---wide',
+            'keyboard__key--wide',
             'keyboard__key--dark'
           );
           key_element.innerHTML = create_icon_html('check_circle');
@@ -174,7 +174,7 @@ const keyboard = {
         default:
           key_element.textContent = key.toLowerCase();
 
-          key_element.addEventListener('click', () => {
+          key_element.addEventListener('click', (e) => {
             this.properties.value += this.properties.caps_lock
               ? key.toUpperCase()
               : key.toLowerCase();
@@ -202,25 +202,26 @@ const keyboard = {
     this.properties.caps_lock = !this.properties.caps_lock;
 
     for (const key of this.elements.keys)
-      if (key.childElementCount == 0) {
+      if (key.childElementCount === 0) {
         key.textContent = this.properties.caps_lock
           ? key.textContent.toUpperCase()
           : key.textContent.toLowerCase();
       }
   },
 
-  open(initial_value, on_input, on_close) {
+  open(initial_value, oninput, onclose) {
     this.properties.value = initial_value || '';
-    this.event_handlers.oninput = on_input;
-    this.event_handlers.onclose = on_close;
+    this.event_handlers.oninput = oninput;
+    this.event_handlers.onclose = onclose;
     this.elements.main.classList.remove('keyboard--hidden');
   },
 
   close() {
     this.properties.value = '';
-    this.event_handlers.on_input = oninput;
-    this.event_handlers.on_close = onclose;
+    this.event_handlers.oninput = oninput;
+    this.event_handlers.onclose = onclose;
     this.elements.main.classList.add('keyboard--hidden');
+    console.log(oninput, onclose);
   },
 };
 
